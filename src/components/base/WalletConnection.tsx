@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import useWalletContext from 'src/hooks/useWalletContext';
 
@@ -7,15 +7,25 @@ export enum RequiredWallet {
     Aeternity,
 }
 
-const WalletConnection: React.FC<{ requiredWallet: RequiredWallet; children: React.ReactNode }> = ({
-    requiredWallet,
-    children,
-}) => {
-    const { connectAeternityWallet, connectEthereumWallet, aeternityAddress, ethereumAddress } = useWalletContext();
+const WalletConnection: React.FC<{
+    requiredWallet: RequiredWallet;
+    children: React.ReactNode;
+    onWalletConnectError: (e: string) => void;
+}> = ({ requiredWallet, children, onWalletConnectError }) => {
+    const {
+        connectAeternityWallet,
+        connectEthereumWallet,
+        aeternityAddress,
+        ethereumAddress,
+        walletConnectError,
+        connecting,
+    } = useWalletContext();
+
+    useEffect(() => onWalletConnectError(walletConnectError), [walletConnectError]);
 
     if (requiredWallet == RequiredWallet.Ethereum && !ethereumAddress) {
         return (
-            <Button fullWidth variant="contained" onClick={connectEthereumWallet}>
+            <Button disabled={connecting} fullWidth variant="contained" onClick={connectEthereumWallet}>
                 Connect Wallet
             </Button>
         );
@@ -23,7 +33,7 @@ const WalletConnection: React.FC<{ requiredWallet: RequiredWallet; children: Rea
 
     if (requiredWallet == RequiredWallet.Aeternity && !aeternityAddress) {
         return (
-            <Button fullWidth variant="contained" onClick={connectAeternityWallet}>
+            <Button disabled={connecting} fullWidth variant="contained" onClick={connectAeternityWallet}>
                 Connect Wallet
             </Button>
         );

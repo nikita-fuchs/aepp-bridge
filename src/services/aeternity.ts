@@ -24,21 +24,27 @@ export const Sdk = new AeSdkAepp({
 export const connect = async (): Promise<string> => {
     return new Promise((resolve, reject) => {
         const handleWallets = async ({ wallets, newWallet }: any) => {
-            newWallet ||= Object.values(wallets)[0];
-            if (newWallet) {
-                const walletInfo = await Sdk.connectToWallet(newWallet.getConnection());
-                const {
-                    address: { current },
-                } = await Sdk.subscribeAddress(SUBSCRIPTION_TYPES.subscribe, 'connected');
-                const address = Object.keys(current)[0];
-                console.log(walletInfo, current);
-                resolve(address);
+            try {
+                walletDetectionTimeout && clearTimeout(walletDetectionTimeout);
+                newWallet ||= Object.values(wallets)[0];
+                if (newWallet) {
+                    const walletInfo = await Sdk.connectToWallet(newWallet.getConnection());
+                    const {
+                        address: { current },
+                    } = await Sdk.subscribeAddress(SUBSCRIPTION_TYPES.subscribe, 'connected');
+                    const address = Object.keys(current)[0];
+                    console.log(walletInfo, current);
+                    resolve(address);
+                }
+                stopScan();
+                reject();
+            } catch (e) {
+                reject(e);
             }
-            stopScan();
-            reject();
         };
 
         const scannerConnection = new BrowserWindowMessageConnection();
+        const walletDetectionTimeout = setTimeout(() => reject(new Error('Aeternity wallet not available')), 3500);
         const stopScan = walletDetector(scannerConnection, handleWallets);
     });
 };

@@ -220,19 +220,12 @@ const Bridge: React.FC = () => {
     }, [asset, aeternity, destination, normalizedAmount, isValidDestination]);
     return (
         <Container sx={{ paddingY: 8 }}>
-            <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="flex-start"
-                spacing={1}
-                sx={{ marginBottom: 10 }}
-            >
-                <Card sx={{ minWidth: 400 }}>
+            <Grid container direction="row" justifyContent="center" alignItems="flex-start" sx={{ marginBottom: 10 }}>
+                <Card sx={{ minWidth: 375 }}>
                     <CardContent>
                         <Stack justifyContent="space-between" direction={'row'}>
                             <Typography variant="h4" gutterBottom>
-                                Bridge assets
+                                Bridge
                             </Typography>
                             <Breadcrumbs separator={<NavigateNextIcon />} aria-label="breadcrumb">
                                 {direction == Direction.AeternityToEthereum ? (
@@ -371,6 +364,7 @@ const Bridge: React.FC = () => {
                     </Grid>
                     <CardActions sx={{ margin: 1, paddingTop: 1 }}>
                         <WalletConnection
+                            onWalletConnectError={setError}
                             requiredWallet={
                                 direction == Direction.EthereumToAeternity
                                     ? RequiredWallet.Ethereum

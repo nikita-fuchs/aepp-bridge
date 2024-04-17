@@ -5,16 +5,19 @@ import Logger from '../services/logger';
 import WalletContext from './WalletContext';
 
 const WalletProvider: React.FC<{ children: React.ReactNode }> = (props) => {
-    const [connecting, setConnecting] = React.useState(true);
+    const [connecting, setConnecting] = React.useState(false);
     const [aeternityAddress, setAeternityAddress] = React.useState<string>();
     const [ethereumAddress, setEthereumAddress] = React.useState<string>();
+    const [walletConnectError, setWalletConnectError] = React.useState<string>('');
 
     React.useEffect(() => {
-        Ethereum.Provider.listAccounts().then((accounts) => {
-            if (accounts.length > 0) {
-                setEthereumAddress(accounts[0]);
-            }
-        });
+        if (Ethereum.Provider) {
+            Ethereum.Provider.listAccounts().then((accounts) => {
+                if (accounts.length > 0) {
+                    setEthereumAddress(accounts[0]);
+                }
+            });
+        }
     }, []);
 
     const connectAeternityWallet = React.useCallback(async () => {
@@ -24,12 +27,18 @@ const WalletProvider: React.FC<{ children: React.ReactNode }> = (props) => {
             setAeternityAddress(address);
         } catch (e) {
             Logger.error(e);
+            setWalletConnectError((e as Error).message);
         } finally {
             setConnecting(false);
         }
     }, []);
 
     const connectEthereumWallet = React.useCallback(async () => {
+        if (!Ethereum.Provider) {
+            setWalletConnectError('Ethereum wallet not available');
+            return;
+        }
+
         try {
             setConnecting(true);
             const address = await Ethereum.connect();
@@ -49,6 +58,7 @@ const WalletProvider: React.FC<{ children: React.ReactNode }> = (props) => {
                 ethereumAddress: ethereumAddress,
                 connectAeternityWallet,
                 connectEthereumWallet,
+                walletConnectError,
             }}
         >
             {props.children}

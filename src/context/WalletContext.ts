@@ -6,6 +6,7 @@ export interface IWalletContext {
     connecting: boolean;
     connectAeternityWallet: () => Promise<void>;
     connectEthereumWallet: () => Promise<void>;
+    walletConnectError: string;
 }
 
 const contextStub = {
@@ -16,6 +17,7 @@ const contextStub = {
     connectEthereumWallet: async () => {
         // stub
     },
+    walletConnectError: '',
 };
 
 const WalletContext = createContext<IWalletContext>(contextStub);
