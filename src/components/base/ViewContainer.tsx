@@ -41,13 +41,13 @@ const ViewContainer: React.FC<{ children: React.ReactNode }> = (props) => {
         <div className={classes.root}>
             <NavigationBar />
             <div className={classes.container}>{props.children}</div>
-            <footer className={classes.footer}>
+            {/* <footer className={classes.footer}>
                 <a href="https://acurast.com" target="_blank" rel="noopener noreferrer" className={classes.link}>
                     <Typography variant="overline" style={{ marginRight: '0.5em' }}>
                         Powered by Acurast
                     </Typography>
                 </a>
-            </footer>
+            </footer> */}
         </div>
     );
 };

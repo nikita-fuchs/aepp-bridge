@@ -7,7 +7,7 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/st
 import CssBaseline from '@mui/material/CssBaseline';
 
 const ThemeProvider: React.FC<{ children: React.ReactNode }> = (props) => {
-    const [theme, setTheme] = React.useState<ThemeKind>(ThemeKind.Dark);
+    const [theme, setTheme] = React.useState<ThemeKind>(ThemeKind.Light);
 
     // Create a theme instance.
     const themeConfig = React.useMemo(
@@ -33,8 +33,8 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = (props) => {
                     mode: theme,
                     primary: {
                         light: '#69a9ff',
-                        main: '#eeff41',
-                        dark: '#0050cb',
+                        main: '#f5274e',
+                        dark: '#222222',
                     },
                     secondary: {
                         light: '#FFF',

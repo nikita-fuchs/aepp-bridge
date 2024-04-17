@@ -3,6 +3,7 @@ import deployment from './deployment.json';
 export interface Asset {
     token_rank?: number;
     link: string;
+    aeAddress: string;
     ethAddress: string;
     nameandsymbol: string;
     name: string;

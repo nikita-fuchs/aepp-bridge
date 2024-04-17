@@ -1,5 +1,16 @@
 import React from 'react';
-import { Box, Breadcrumbs, Container, Dialog, DialogTitle, Divider, Grid, Stack, Typography } from '@mui/material';
+import {
+    Box,
+    Breadcrumbs,
+    Container,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Grid,
+    Stack,
+    Typography,
+} from '@mui/material';
 import AeternityIcon from 'src/components/base/icons/aeternity';
 import EthereumIcon from 'src/components/base/icons/ethereum';
 
@@ -51,6 +62,7 @@ const Bridge: React.FC = () => {
     const { aeternity, ethereum, assets, asset, updateAsset } = useAppContext();
     const { aeternityAddress } = useWalletContext();
     const [error, setError] = React.useState('');
+    const [buttonBusy, setButtonBusy] = React.useState(false);
     const [confirming, setConfirming] = React.useState(false);
     const [confirmingMsg, setConfirmingMsg] = React.useState('');
     const [operationHash, setOperationHash] = React.useState('');
@@ -118,6 +130,7 @@ const Bridge: React.FC = () => {
             return setError('Not enough balance!');
         }
 
+        setButtonBusy(true);
         try {
             let result = await assetContract.approve(Constants.ethereum.bridge_address, normalizedAmount);
             setOperationHash(result.hash);
@@ -140,7 +153,9 @@ const Bridge: React.FC = () => {
         } finally {
             setConfirming(false);
             setConfirmingMsg('');
+            setOperationHash('');
         }
+        setButtonBusy(false);
     }, [asset, ethereum, destination, normalizedAmount, isValidDestination]);
 
     const bridgeToEvm = React.useCallback(async () => {
@@ -154,6 +169,7 @@ const Bridge: React.FC = () => {
             return setError('Not enough balance!');
         }
 
+        setButtonBusy(true);
         try {
             const asset_contract = await Aeternity.Sdk.initializeContract({
                 aci: Constants.aeternity.asset_aci,
@@ -199,8 +215,9 @@ const Bridge: React.FC = () => {
             setConfirming(false);
             setConfirmingMsg('');
         }
-    }, [asset, aeternity, destination, normalizedAmount, isValidDestination]);
 
+        setButtonBusy(false);
+    }, [asset, aeternity, destination, normalizedAmount, isValidDestination]);
     return (
         <Container sx={{ paddingY: 8 }}>
             <Grid
@@ -213,7 +230,10 @@ const Bridge: React.FC = () => {
             >
                 <Card sx={{ minWidth: 400 }}>
                     <CardContent>
-                        <Stack alignItems="center">
+                        <Stack justifyContent="space-between" direction={'row'}>
+                            <Typography variant="h4" gutterBottom>
+                                Bridge assets
+                            </Typography>
                             <Breadcrumbs separator={<NavigateNextIcon />} aria-label="breadcrumb">
                                 {direction == Direction.AeternityToEthereum ? (
                                     <AeternityIcon width={48} height={48} />
@@ -233,11 +253,11 @@ const Bridge: React.FC = () => {
                         <Grid container direction="row" spacing={1} sx={{ marginBottom: 2 }}>
                             <Grid item xs={5}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="network-from-select-label">Network</InputLabel>
+                                    <InputLabel id="network-from-select-label">From Network</InputLabel>
                                     <Select
                                         labelId="network-from-select-label"
                                         id="network-from-select"
-                                        label="Network"
+                                        label="From Network"
                                         value={direction}
                                         onChange={handleDirectionChange}
                                     >
@@ -298,8 +318,14 @@ const Bridge: React.FC = () => {
                         <FormControl fullWidth sx={{ marginBottom: 2 }}>
                             <TextField
                                 id="token-select"
-                                label="Destination token"
-                                value={(direction == Direction.EthereumToAeternity ? 'æ' : '') + asset.symbol}
+                                label="Destination Token"
+                                value={
+                                    (direction == Direction.EthereumToAeternity ? 'æ' : '') +
+                                    asset.symbol +
+                                    ` (${
+                                        direction == Direction.EthereumToAeternity ? asset.aeAddress : asset.ethAddress
+                                    })`
+                                }
                                 disabled
                             ></TextField>
                         </FormControl>
@@ -322,7 +348,9 @@ const Bridge: React.FC = () => {
                             error={!isValidDestination}
                             fullWidth
                             id="outlined-textfield-destination"
-                            label="Destination Address"
+                            label={`Destination ${
+                                direction == Direction.EthereumToAeternity ? 'Aeternity' : 'Ethereum'
+                            } Address`}
                             variant="outlined"
                             type="text"
                             autoComplete="off"
@@ -349,28 +377,34 @@ const Bridge: React.FC = () => {
                                     : RequiredWallet.Aeternity
                             }
                         >
-                            {direction === Direction.AeternityToEthereum ? (
-                                <Button fullWidth variant="contained" onClick={bridgeToEvm}>
-                                    Bridge to Ethereum
-                                </Button>
-                            ) : (
-                                <Button fullWidth variant="contained" onClick={bridgeToAeternity}>
-                                    Bridge to Aeternity
-                                </Button>
-                            )}
+                            <Button
+                                disabled={buttonBusy}
+                                sx={{ ':hover': { background: '#222' } }}
+                                fullWidth
+                                variant="contained"
+                                onClick={direction === Direction.AeternityToEthereum ? bridgeToEvm : bridgeToAeternity}
+                            >
+                                Bridge to {direction === Direction.AeternityToEthereum ? 'Ethereum' : 'Aeternity'}
+                            </Button>
                         </WalletConnection>
                     </CardActions>
                 </Card>
             </Grid>
 
-            <Dialog title="Error" open={!!error} onClose={() => setError('')} maxWidth="md">
-                <DialogTitle>{error}</DialogTitle>
-            </Dialog>
+            {!!error && (
+                <Dialog title="Error" open={true} onClose={() => setError('')} maxWidth="md">
+                    <DialogTitle>Error</DialogTitle>
+                    <DialogContent>
+                        {error.includes('ACTION_REJECTED') ? 'User rejected transaction' : error}
+                    </DialogContent>
+                </Dialog>
+            )}
             <Dialog title="Operation Hash" open={!!operationHash} onClose={() => setOperationHash('')} maxWidth="md">
-                <DialogTitle>
+                <DialogTitle>Transaction submitted</DialogTitle>
+                <DialogContent>
                     {direction === Direction.AeternityToEthereum ? (
                         <a
-                            style={{ color: 'white' }}
+                            style={{ color: 'black' }}
                             target="_blank"
                             href={`${Constants.aeternity.explorer}/transactions/${operationHash}`}
                             rel="noreferrer"
@@ -379,7 +413,7 @@ const Bridge: React.FC = () => {
                         </a>
                     ) : (
                         <a
-                            style={{ color: 'white' }}
+                            style={{ color: 'black' }}
                             target="_blank"
                             href={`${Constants.ethereum.etherscan}/tx/${operationHash}`}
                             rel="noreferrer"
@@ -387,7 +421,7 @@ const Bridge: React.FC = () => {
                             Check operation on Etherscan
                         </a>
                     )}
-                </DialogTitle>
+                </DialogContent>
             </Dialog>
         </Container>
     );
