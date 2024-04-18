@@ -60,7 +60,7 @@ const printBalance = (
 
 const Bridge: React.FC = () => {
     const { aeternity, ethereum, assets, asset, updateAsset } = useAppContext();
-    const { aeternityAddress } = useWalletContext();
+    const { aeternityAddress, ethereumAddress } = useWalletContext();
     const [error, setError] = React.useState('');
     const [buttonBusy, setButtonBusy] = React.useState(false);
     const [confirming, setConfirming] = React.useState(false);
@@ -132,21 +132,23 @@ const Bridge: React.FC = () => {
 
         setButtonBusy(true);
         try {
-            let result = await assetContract.approve(Constants.ethereum.bridge_address, normalizedAmount);
-            setOperationHash(result.hash);
-            setConfirmingMsg('Approving allowance');
-            setConfirming(true);
+            const allowance = await assetContract.allowance(ethereumAddress, Constants.ethereum.bridge_address);
+            if (allowance.lt(normalizedAmount)) {
+                const approveResult = await assetContract.approve(Constants.ethereum.bridge_address, normalizedAmount);
+                setOperationHash(approveResult.hash);
+                setConfirmingMsg('Approving allowance');
+                setConfirming(true);
 
-            await result.wait(1);
-            setConfirming(false);
+                await approveResult.wait(1);
+                setConfirming(false);
+            }
 
-            console.log(asset.ethAddress, destination, normalizedAmount);
-            result = await bridge.bridge_out(asset.ethAddress, destination, normalizedAmount);
-            setOperationHash(result.hash);
+            const bridgeResult = await bridge.bridge_out(asset.ethAddress, destination, normalizedAmount);
+            setOperationHash(bridgeResult.hash);
             setConfirmingMsg('Bridge action');
             setConfirming(true);
 
-            await result.wait(1);
+            await bridgeResult.wait(1);
         } catch (e: any) {
             Logger.error(e);
             setError(e.message);
