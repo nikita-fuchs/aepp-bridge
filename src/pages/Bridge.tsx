@@ -206,7 +206,7 @@ const Bridge: React.FC = () => {
             setOperationHash(bridge_out_call.hash);
         } catch (e: any) {
             Logger.error(e);
-            return setError(e.message);
+            setError(e.message);
         } finally {
             setConfirming(false);
             setConfirmingMsg('');
