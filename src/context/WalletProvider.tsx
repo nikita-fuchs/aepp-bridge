@@ -11,10 +11,20 @@ const WalletProvider: React.FC<{ children: React.ReactNode }> = (props) => {
     const [walletConnectError, setWalletConnectError] = React.useState<string>('');
 
     React.useEffect(() => {
-        if (Ethereum.Provider) {
+        const ethereumClient = (window as any).ethereum;
+
+        if (ethereumClient) {
+            console.log('Ethereum Provider:', Ethereum.Provider.provider);
             Ethereum.Provider.listAccounts().then((accounts) => {
                 if (accounts.length > 0) {
                     setEthereumAddress(accounts[0]);
+                }
+            });
+            ethereumClient.on('accountsChanged', (accounts: any) => {
+                if (accounts.length > 0) {
+                    setEthereumAddress(accounts[0]);
+                } else {
+                    setEthereumAddress(undefined);
                 }
             });
         }

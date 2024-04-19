@@ -1,5 +1,5 @@
 import React from 'react';
-import AppContext, { AeternityBridgeInfo, EVMBridgeInfo } from './AppContext';
+import AppContext, { AeternityBridgeInfo, EVMBridgeInfo, Direction } from './AppContext';
 import * as Aeternity from 'src/services/aeternity';
 import Constants, { Asset } from 'src/constants';
 import Logger from 'src/services/logger';
@@ -75,6 +75,7 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [asset, updateAsset] = React.useState<Asset>(Constants.assets[0]);
     const [evmBridgeInfo, setEvmBridgeInfo] = React.useState<EVMBridgeInfo>();
     const [aeternityBridgeInfo, setAeternityBridgeInfo] = React.useState<AeternityBridgeInfo>();
+    const [direction, updateDirection] = React.useState<Direction>(Direction.EthereumToAeternity);
 
     React.useEffect(() => {
         isMounter.current = true;
@@ -122,6 +123,8 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 ethereum: {
                     bridgeInfo: evmBridgeInfo,
                 },
+                direction,
+                updateDirection,
             }}
         >
             {children}

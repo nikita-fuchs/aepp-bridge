@@ -24,20 +24,15 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import useWalletContext from 'src/hooks/useWalletContext';
+import useWalletContext, { RequiredWallet } from 'src/hooks/useWalletContext';
 import useAppContext from 'src/hooks/useAppContext';
 import Constants, { Asset } from 'src/constants';
 import * as Aeternity from 'src/services/aeternity';
 import Logger from 'src/services/logger';
 import * as Ethereum from 'src/services/ethereum';
-import WalletConnection, { RequiredWallet } from 'src/components/base/WalletConnection';
-import { AeternityBridgeInfo, EVMBridgeInfo } from 'src/context/AppContext';
+import WalletConnection from 'src/components/base/WalletConnection';
+import { AeternityBridgeInfo, EVMBridgeInfo, Direction } from 'src/context/AppContext';
 import Spinner from 'src/components/base/Spinner';
-
-export enum Direction {
-    AeternityToEthereum = 'aeternity-ethereum',
-    EthereumToAeternity = 'ethereum-aeternity',
-}
 
 const printBalance = (
     direction: Direction,
@@ -59,7 +54,7 @@ const printBalance = (
 };
 
 const Bridge: React.FC = () => {
-    const { aeternity, ethereum, assets, asset, updateAsset } = useAppContext();
+    const { aeternity, ethereum, assets, asset, updateAsset, direction, updateDirection } = useAppContext();
     const { aeternityAddress, ethereumAddress } = useWalletContext();
     const [error, setError] = React.useState('');
     const [buttonBusy, setButtonBusy] = React.useState(false);
@@ -69,7 +64,6 @@ const Bridge: React.FC = () => {
 
     const [destination, setDestination] = React.useState<string>();
     const [amount, setAmount] = React.useState<string>();
-    const [direction, updateDirection] = React.useState<Direction>(Direction.EthereumToAeternity);
 
     const handleDirectionChange = React.useCallback((evt: SelectChangeEvent<Direction>) => {
         updateDirection(evt.target.value as Direction);

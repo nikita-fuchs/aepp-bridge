@@ -21,6 +21,11 @@ export interface FundEvent {
     nonce: BigNumber;
 }
 
+export enum Direction {
+    AeternityToEthereum = 'aeternity-ethereum',
+    EthereumToAeternity = 'ethereum-aeternity',
+}
+
 export interface IAppContext {
     asset: Asset;
     assets: Asset[];
@@ -31,15 +36,18 @@ export interface IAppContext {
     ethereum: {
         bridgeInfo?: EVMBridgeInfo;
     };
+    direction: Direction;
+    updateDirection: (direction: Direction) => void;
 }
 
 const contextStub = {
     asset: {} as any,
     assets: [],
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    updateAsset: () => {},
     aeternity: {},
     ethereum: {},
+    direction: Direction.EthereumToAeternity,
+    updateAsset: () => {},
+    updateDirection: () => {},
 };
 
 const AppContext = createContext<IAppContext>(contextStub);

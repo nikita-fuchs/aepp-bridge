@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
-import useWalletContext from 'src/hooks/useWalletContext';
-
-export enum RequiredWallet {
-    Ethereum,
-    Aeternity,
-}
+import useWalletContext, { RequiredWallet } from 'src/hooks/useWalletContext';
 
 const WalletConnection: React.FC<{
     requiredWallet: RequiredWallet;
