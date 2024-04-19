@@ -60,10 +60,11 @@ async function fetchEvmBridgeInfo(assetAddress: string, ethereumAddress?: string
         Ethereum.Provider,
     );
 
+    const balance = (await asset.balanceOf(ethereumAddress).catch(() => 0)).toString();
     return {
         asset: {
             address: assetAddress,
-            balance: (await asset.balanceOf(ethereumAddress).catch(() => 0)).toString(),
+            balance,
         },
     };
 }
