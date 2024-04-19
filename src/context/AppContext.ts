@@ -32,9 +32,11 @@ export interface IAppContext {
     updateAsset: (symbol: Asset) => void;
     aeternity: {
         bridgeInfo?: AeternityBridgeInfo;
+        balance?: string;
     };
     ethereum: {
         bridgeInfo?: EVMBridgeInfo;
+        balance?: string;
     };
     direction: Direction;
     updateDirection: (direction: Direction) => void;

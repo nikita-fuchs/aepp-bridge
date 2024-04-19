@@ -5,6 +5,7 @@ import Constants, { Asset } from 'src/constants';
 import Logger from 'src/services/logger';
 import * as Ethereum from 'src/services/ethereum';
 import useWalletContext from 'src/hooks/useWalletContext';
+import BigNumber from 'bignumber.js';
 
 async function fetchAeternityBridgeInfo(asset: Asset, aeternityAddress?: string): Promise<AeternityBridgeInfo> {
     const bridge_contract = await Aeternity.Sdk.initializeContract({
@@ -69,6 +70,22 @@ async function fetchEvmBridgeInfo(assetAddress: string, ethereumAddress?: string
     };
 }
 
+const fetchEthereumBalance = async (address: string | undefined) => {
+    if (!address) return;
+    const balance = new BigNumber((await Ethereum.Provider.getBalance(address)).toString());
+
+    return balance.shiftedBy(-18).toFormat(2, BigNumber.ROUND_DOWN);
+};
+
+const fetchAeternityBalance = async (address: string | undefined) => {
+    if (!address) return;
+    address = address.replace('ak_', '');
+
+    const balance = await Aeternity.Sdk.getBalance(`ak_${address}`);
+
+    return new BigNumber(balance.toString()).shiftedBy(-18).toFormat(2, BigNumber.ROUND_DOWN);
+};
+
 const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const isMounter = React.useRef(false);
     const { aeternityAddress, ethereumAddress } = useWalletContext();
@@ -76,6 +93,8 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [evmBridgeInfo, setEvmBridgeInfo] = React.useState<EVMBridgeInfo>();
     const [aeternityBridgeInfo, setAeternityBridgeInfo] = React.useState<AeternityBridgeInfo>();
     const [direction, updateDirection] = React.useState<Direction>(Direction.EthereumToAeternity);
+    const [ethereumBalance, setEthereumBalance] = React.useState<string>();
+    const [aeternityBalance, setAeternityBalance] = React.useState<string>();
 
     React.useEffect(() => {
         isMounter.current = true;
@@ -97,6 +116,9 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     }
                 })
                 .catch(Logger.error);
+
+            fetchEthereumBalance(ethereumAddress).then(setEthereumBalance).catch(Logger.error);
+            fetchAeternityBalance(aeternityAddress).then(setAeternityBalance).catch(Logger.error);
         };
         fetch(); // First fetch
 
@@ -119,9 +141,11 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 },
                 aeternity: {
                     bridgeInfo: aeternityBridgeInfo,
+                    balance: aeternityBalance,
                 },
                 ethereum: {
                     bridgeInfo: evmBridgeInfo,
+                    balance: ethereumBalance,
                 },
                 direction,
                 updateDirection,
