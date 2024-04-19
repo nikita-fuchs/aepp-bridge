@@ -3,7 +3,7 @@ import { Box, Toolbar, AppBar, Menu, Typography, MenuItem, Link, Button, Divider
 import AeternityLogo from '../base/icons/logo';
 import ConnectWallet from './ConnectWallet';
 
-const linkStyles = { marginLeft: 1, textDecoration: 'none', ':hover': { textDecoration: 'underline' }, color: 'black' };
+const linkStyles = { marginLeft: 2, textDecoration: 'none', ':hover': { textDecoration: 'underline' }, color: 'black' };
 
 const NavigationBar = () => {
     return (

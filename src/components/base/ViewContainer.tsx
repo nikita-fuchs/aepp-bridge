@@ -3,6 +3,9 @@ import { makeStyles } from '@mui/styles';
 
 import NavigationBar from '../navigation';
 import Typography from '@mui/material/Typography';
+import { Link, Box, Container } from '@mui/material';
+
+import AeternityLogo from '../base/icons/logo';
 
 const useStyles = makeStyles({
     root: {
@@ -20,11 +23,11 @@ const useStyles = makeStyles({
     },
     footer: {
         width: '100%',
-        height: 50,
-        borderTop: '1px solid #eaeaea',
         display: 'flex',
-        justifyContent: 'center',
+        paddingTop: 5,
+        paddingBottom: 5,
         alignItems: 'center',
+        backgroundColor: 'white',
     },
     link: {
         display: 'flex',
@@ -34,6 +37,7 @@ const useStyles = makeStyles({
         color: 'inherit',
     },
 });
+const linkStyles = { marginLeft: 2, textDecoration: 'none', ':hover': { textDecoration: 'underline' }, color: 'black' };
 
 const ViewContainer: React.FC<{ children: React.ReactNode }> = (props) => {
     const classes = useStyles();
@@ -41,13 +45,22 @@ const ViewContainer: React.FC<{ children: React.ReactNode }> = (props) => {
         <div className={classes.root}>
             <NavigationBar />
             <div className={classes.container}>{props.children}</div>
-            {/* <footer className={classes.footer}>
-                <a href="https://acurast.com" target="_blank" rel="noopener noreferrer" className={classes.link}>
-                    <Typography variant="overline" style={{ marginRight: '0.5em' }}>
-                        Powered by Acurast
-                    </Typography>
-                </a>
-            </footer> */}
+            <footer className={classes.footer}>
+                <Container sx={{ flexDirection: 'row', display: 'flex' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography sx={{ fontSize: 12 }}>Powered by</Typography>
+                        <AeternityLogo width={100} />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flex: 1 }}>
+                        <Link sx={linkStyles} href="https://aescan.io" target="_blank">
+                            Blockchain Explorer
+                        </Link>
+                        <Link sx={linkStyles} href="https://forum.aeternity.com" target="_blank">
+                            Community Support
+                        </Link>
+                    </Box>
+                </Container>
+            </footer>
         </div>
     );
 };
