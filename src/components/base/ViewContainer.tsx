@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 
 import NavigationBar from '../navigation';
 import Typography from '@mui/material/Typography';
-import { Link, Box, Container } from '@mui/material';
+import { Link, Box } from '@mui/material';
 
 import AeternityLogo from '../base/icons/logo';
 
@@ -46,7 +46,7 @@ const ViewContainer: React.FC<{ children: React.ReactNode }> = (props) => {
             <NavigationBar />
             <div className={classes.container}>{props.children}</div>
             <footer className={classes.footer}>
-                <Container sx={{ flexDirection: 'row', display: 'flex' }}>
+                <Box sx={{ flexDirection: 'row', display: 'flex', flexGrow: 1, flex: 1, pl: 3, pr: 3 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography sx={{ fontSize: 12 }}>Powered by</Typography>
                         <AeternityLogo width={100} />
@@ -59,7 +59,7 @@ const ViewContainer: React.FC<{ children: React.ReactNode }> = (props) => {
                             Community Support
                         </Link>
                     </Box>
-                </Container>
+                </Box>
             </footer>
         </div>
     );
