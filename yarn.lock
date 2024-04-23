@@ -18,10 +18,10 @@
     safe-buffer "^5.2.1"
     sha.js "^2.4.11"
 
-"@aeternity/aepp-sdk@13.3.1":
-  version "13.3.1"
-  resolved "https://registry.yarnpkg.com/@aeternity/aepp-sdk/-/aepp-sdk-13.3.1.tgz#562caf7c24f2cd7303adf588f81b575483648477"
-  integrity sha512-NJIo5qj0XxrqCPiFTgCHLm9Px2ELUwX+R2WXISzkcuIqukZwAztbF8dm8GHOiyP/OOva8wKCWWC5qKT6Z9bpRw==
+"@aeternity/aepp-sdk@13.3.2":
+  version "13.3.2"
+  resolved "https://registry.yarnpkg.com/@aeternity/aepp-sdk/-/aepp-sdk-13.3.2.tgz#8d6501f1c7f98bc2e15440a8832381019dca1842"
+  integrity sha512-aaXQAOZKTkCYwc49+pqo1V9qHU8IhPzZkIcKaCK//ogrr2twCmV1Hh5p1r6OR4fhLaNTEPqMGK86HNGWUphWjw==
   dependencies:
     "@aeternity/aepp-calldata" "^1.7.0"
     "@aeternity/argon2" "^0.0.1"
