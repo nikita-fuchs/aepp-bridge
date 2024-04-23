@@ -44,7 +44,7 @@ export const connect = async (): Promise<string> => {
         };
 
         const scannerConnection = new BrowserWindowMessageConnection();
-        const walletDetectionTimeout = setTimeout(() => reject(new Error('Aeternity wallet not available')), 3500);
+        const walletDetectionTimeout = setTimeout(() => reject(new Error('Aeternity wallet not available')), 5000);
         const stopScan = walletDetector(scannerConnection, handleWallets);
     });
 };
