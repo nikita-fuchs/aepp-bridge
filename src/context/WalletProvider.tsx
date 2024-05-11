@@ -27,6 +27,10 @@ const WalletProvider: React.FC<{ children: React.ReactNode }> = (props) => {
                     setEthereumAddress(undefined);
                 }
             });
+
+            Aeternity.Sdk.onAddressChange = ({ current }) => {
+                setAeternityAddress(Object.keys(current)[0]);
+            };
         }
     }, []);
 
@@ -60,6 +64,14 @@ const WalletProvider: React.FC<{ children: React.ReactNode }> = (props) => {
         }
     }, []);
 
+    const disconnectWallet = React.useCallback(() => {
+        if (ethereumAddress) {
+            setEthereumAddress(undefined);
+        } else if (aeternityAddress) {
+            setAeternityAddress(undefined);
+        }
+    }, [ethereumAddress, aeternityAddress]);
+
     return (
         <WalletContext.Provider
             value={{
@@ -69,6 +81,7 @@ const WalletProvider: React.FC<{ children: React.ReactNode }> = (props) => {
                 connectAeternityWallet,
                 connectEthereumWallet,
                 walletConnectError,
+                disconnectWallet,
             }}
         >
             {props.children}

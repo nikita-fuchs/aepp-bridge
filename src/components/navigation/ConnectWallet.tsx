@@ -1,4 +1,8 @@
-import { Box, Button } from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import ContentCopy from '@mui/icons-material/ContentCopy';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 import { Direction } from 'src/context/AppContext';
 import useAppContext from 'src/hooks/useAppContext';
 import useWalletContext from 'src/hooks/useWalletContext';
@@ -12,19 +16,35 @@ const shortenAddress = (address: string | undefined) => {
 };
 
 const WalletConnect = () => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
     const { direction, ethereum, aeternity } = useAppContext();
-    const { aeternityAddress, ethereumAddress, connectAeternityWallet, connectEthereumWallet, connecting } =
-        useWalletContext();
+    const {
+        aeternityAddress,
+        ethereumAddress,
+        connectAeternityWallet,
+        connectEthereumWallet,
+        connecting,
+        disconnectWallet,
+    } = useWalletContext();
 
     const connectedToAeternity = direction === Direction.AeternityToEthereum && aeternityAddress;
     const connectedToEthereum = direction === Direction.EthereumToAeternity && ethereumAddress;
     const connected = connectedToAeternity || connectedToEthereum;
+    const shortAddress = shortenAddress(connectedToAeternity ? aeternityAddress : ethereumAddress);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     let content = <>Connect Wallet</>;
-    let onClick = () => {};
+    let onClick = (event: React.MouseEvent<HTMLButtonElement>) => {};
 
     if (connected) {
-        const shortAddress = shortenAddress(connectedToAeternity ? aeternityAddress : ethereumAddress);
         const showBalance = (connectedToEthereum && ethereum.balance) || (connectedToAeternity && aeternity.balance);
         content = (
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -41,18 +61,61 @@ const WalletConnect = () => {
                 )}
             </Box>
         );
+        onClick = handleClick;
     } else {
         onClick = direction === Direction.AeternityToEthereum ? connectAeternityWallet : connectEthereumWallet;
     }
 
+    const handleCopyAddress = () => {
+        navigator.clipboard.writeText((connectedToEthereum ? ethereumAddress : aeternityAddress)!);
+        handleClose();
+    };
+    const handleDisconnect = () => {
+        disconnectWallet();
+        handleClose();
+    };
+
     return (
-        <Button
-            sx={{ display: 'flex', textTransform: 'none', fontSize: '15px' }}
-            disabled={connecting}
-            onClick={onClick}
-        >
-            {content}
-        </Button>
+        <>
+            <Button
+                sx={{ display: 'flex', textTransform: 'none', fontSize: '15px' }}
+                disabled={connecting}
+                onClick={onClick}
+            >
+                {content}
+            </Button>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+            >
+                <MenuItem onClick={handleCopyAddress}>
+                    <ListItemIcon>
+                        <ContentCopy fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Copy address</ListItemText>
+                </MenuItem>
+
+                <MenuItem onClick={handleDisconnect}>
+                    <ListItemIcon>
+                        <LogoutIcon color="error" fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText sx={{ color: 'red' }}>Disconnect</ListItemText>
+                </MenuItem>
+            </Menu>
+        </>
     );
 };
 
