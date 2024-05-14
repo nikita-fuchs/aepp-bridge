@@ -11,7 +11,7 @@ import Constants from 'src/constants';
 
 export const Sdk = new AeSdkAepp({
     name: 'Bridge demo',
-    nodes: [{ name: 'testnet', instance: new Node(Constants.aeternity.rpc) }],
+    nodes: [{ name: Constants.isMainnet ? 'mainnet' : 'testnet', instance: new Node(Constants.aeternity.rpc) }],
     onNetworkChange: async ({ networkId }) => {
         const [{ name }] = (await Sdk.getNodesInPool()).filter((node) => node.nodeNetworkId === networkId);
         Sdk.selectNode(name);

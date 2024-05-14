@@ -2,6 +2,7 @@ import React from 'react';
 import AppContext, { AeternityBridgeInfo, EVMBridgeInfo, Direction } from './AppContext';
 import * as Aeternity from 'src/services/aeternity';
 import Constants, { Asset } from 'src/constants';
+import { assets } from 'src/chainConfig';
 import Logger from 'src/services/logger';
 import * as Ethereum from 'src/services/ethereum';
 import useWalletContext from 'src/hooks/useWalletContext';
@@ -133,7 +134,8 @@ const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <AppContext.Provider
             value={{
                 asset,
-                assets: Constants.assets,
+                isMainnet: Constants.isMainnet,
+                assets: assets[Constants.isMainnet ? 'mainnet' : 'testnet'],
                 updateAsset: (asset: Asset) => {
                     updateAsset(asset);
                     setAeternityBridgeInfo({});

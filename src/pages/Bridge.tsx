@@ -221,7 +221,7 @@ const Bridge: React.FC = () => {
                     <CardContent>
                         <Stack justifyContent="space-between" direction={'row'}>
                             <Typography variant="h4" gutterBottom>
-                                Bridge
+                                Bridge {!Constants.isMainnet && 'Testnet'}
                             </Typography>
                             <Breadcrumbs separator={<NavigateNextIcon />} aria-label="breadcrumb">
                                 {direction == Direction.AeternityToEthereum ? (
@@ -252,12 +252,18 @@ const Bridge: React.FC = () => {
                                     >
                                         <MenuItem value={Direction.AeternityToEthereum}>
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <AeternityIcon /> <Box sx={{ marginLeft: 1 }}>æternity</Box>
+                                                <AeternityIcon />{' '}
+                                                <Box sx={{ marginLeft: 1 }}>
+                                                    æternity {!Constants.isMainnet && 'Testnet'}
+                                                </Box>
                                             </Box>
                                         </MenuItem>
                                         <MenuItem value={Direction.EthereumToAeternity}>
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <EthereumIcon /> <Box sx={{ marginLeft: 1 }}>Ethereum</Box>
+                                                <EthereumIcon />{' '}
+                                                <Box sx={{ marginLeft: 1 }}>
+                                                    Ethereum {!Constants.isMainnet && 'Sepholia Testnet'}
+                                                </Box>
                                             </Box>
                                         </MenuItem>
                                     </Select>

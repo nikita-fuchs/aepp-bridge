@@ -1,4 +1,4 @@
-import { Box, Toolbar, AppBar, Menu, Typography, MenuItem, Link, Button, Divider } from '@mui/material';
+import { Box, Toolbar, AppBar, Link, Divider, Typography } from '@mui/material';
 
 import AeternityBridgeLogo from '../base/icons/aerk-logo';
 import ConnectWallet from './ConnectWallet';

@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import type { BigNumber } from 'bignumber.js';
-import { Asset } from 'src/constants';
+import Constants, { Asset } from 'src/constants';
 
 export interface AssetInfo {
     address: string;
@@ -27,6 +27,7 @@ export enum Direction {
 }
 
 export interface IAppContext {
+    isMainnet: boolean;
     asset: Asset;
     assets: Asset[];
     updateAsset: (symbol: Asset) => void;
@@ -43,6 +44,7 @@ export interface IAppContext {
 }
 
 const contextStub = {
+    isMainnet: Constants.isMainnet,
     asset: {} as any,
     assets: [],
     aeternity: {},

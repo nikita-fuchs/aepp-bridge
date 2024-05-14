@@ -1,8 +1,9 @@
 import deployment from './deployment.json';
+import { bridgeConfig } from './chainConfig';
 
 export interface Asset {
-    token_rank?: number;
-    link: string;
+    // token_rank?: number;
+    // link: string;
     aeAddress: string;
     ethAddress: string;
     nameandsymbol: string;
@@ -12,19 +13,22 @@ export interface Asset {
     icon: string;
 }
 
+const isMainnet = true;
+
 const Constants = {
+    isMainnet,
     assets: deployment.assets,
     ethereum: {
-        bridge_address: deployment.ethereum.bridge_address,
+        bridge_address: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].eth_bridge_address,
+        etherscan: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].etherscan,
+        ethChainId: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].chainId,
         bridge_abi: deployment.ethereum.bridge_abi,
         asset_abi: deployment.ethereum.asset_abi,
-        ethChainId: deployment.ethereum.chainId,
-        etherscan: deployment.ethereum.explorer,
     },
     aeternity: {
-        explorer: deployment.aeternity.explorer,
-        rpc: deployment.aeternity.rpc,
-        bridge_address: deployment.aeternity.bridge_address as `ct_${string}`,
+        bridge_address: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].ae_bridge_address as `ct_${string}`,
+        explorer: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].aescan,
+        rpc: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].aeRpc,
         bridge_aci: deployment.aeternity.bridge_aci,
         asset_aci: deployment.aeternity.asset_aci,
     },
