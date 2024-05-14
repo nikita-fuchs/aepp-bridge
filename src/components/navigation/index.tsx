@@ -1,6 +1,6 @@
 import { Box, Toolbar, AppBar, Menu, Typography, MenuItem, Link, Button, Divider } from '@mui/material';
 
-import AeternityLogo from '../base/icons/logo';
+import AeternityBridgeLogo from '../base/icons/aerk-logo';
 import ConnectWallet from './ConnectWallet';
 
 const linkStyles = { marginLeft: 2, textDecoration: 'none', ':hover': { textDecoration: 'underline' }, color: 'black' };
@@ -18,7 +18,7 @@ const NavigationBar = () => {
                         justifyContent: 'space-between',
                     }}
                 >
-                    <AeternityLogo />
+                    <AeternityBridgeLogo height="50" />
                     <Box sx={{ alignItems: 'center', display: { sm: 'flex', xs: 'none' } }}>
                         <Link sx={linkStyles} href="https://aeternity.com" target="_blank">
                             æternity Website
