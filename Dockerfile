@@ -1,8 +1,15 @@
-FROM nginx:1-alpine
+#Stage 1
+FROM node:18-alpine as builder
+WORKDIR /app
+COPY package*.json .
+COPY yarn*.lock .
+RUN yarn install
+COPY . .
+RUN yarn build
 
-COPY ./build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 80
-
-CMD [ "nginx", "-g", "daemon off;" ]
+#Stage 2
+FROM nginx:1.19.0
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+COPY --from=builder /app/build .
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
