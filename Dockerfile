@@ -5,6 +5,10 @@ COPY package*.json .
 COPY yarn*.lock .
 RUN yarn install
 COPY . .
+
+ARG REVISION
+ENV REACT_APP_REVISION $REVISION
+
 RUN yarn build
 
 #Stage 2

@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Link, Box } from '@mui/material';
 
 import AeternityLogo from '../base/icons/logo';
+import packageJson from '../../../package.json';
 
 const useStyles = makeStyles({
     root: {
@@ -50,6 +51,20 @@ const ViewContainer: React.FC<{ children: React.ReactNode }> = (props) => {
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography sx={{ fontSize: 12 }}>Powered by</Typography>
                         <AeternityLogo width={100} />
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            ml: 1,
+                            pl: 1,
+                            borderLeft: 1,
+                            borderColor: 'grey.300',
+                        }}
+                    >
+                        <Typography sx={{ fontSize: 12 }}>{`v${packageJson.version}`}</Typography>
+                        <Typography sx={{ fontSize: 12 }}>{`rev${process.env.REACT_APP_REVISION}`}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flex: 1 }}>
                         <Link sx={linkStyles} href="https://aescan.io" target="_blank">
