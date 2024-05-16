@@ -1,5 +1,5 @@
 import deployment from './deployment.json';
-import { bridgeConfig } from './chainConfig';
+import { bridgeConfig, assets } from './chainConfig';
 
 export interface Asset {
     // token_rank?: number;
@@ -17,7 +17,7 @@ const isMainnet = true;
 
 const Constants = {
     isMainnet,
-    assets: deployment.assets,
+    assets: assets[isMainnet ? 'mainnet' : 'testnet'],
     ethereum: {
         bridge_address: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].eth_bridge_address,
         etherscan: bridgeConfig[isMainnet ? 'mainnet' : 'testnet'].etherscan,
