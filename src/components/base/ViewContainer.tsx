@@ -64,7 +64,9 @@ const ViewContainer: React.FC<{ children: React.ReactNode }> = (props) => {
                         }}
                     >
                         <Typography sx={{ fontSize: 12 }}>{`v${packageJson.version}`}</Typography>
-                        <Typography sx={{ fontSize: 12 }}>{`rev${process.env.REACT_APP_REVISION}`}</Typography>
+                        {process.env.REACT_APP_REVISION && (
+                            <Typography sx={{ fontSize: 12 }}>{`rev${process.env.REACT_APP_REVISION}`}</Typography>
+                        )}
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flex: 1 }}>
                         <Link sx={linkStyles} href="https://aescan.io" target="_blank">
