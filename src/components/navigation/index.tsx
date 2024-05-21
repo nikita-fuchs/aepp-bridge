@@ -1,6 +1,6 @@
 import { Box, Toolbar, AppBar, Link, Divider, Typography } from '@mui/material';
 
-import AeternityBridgeLogo from '../base/icons/aerk-logo';
+import AeternityBridgeLogo from '../base/icons/aerc-logo';
 import ConnectWallet from './ConnectWallet';
 
 const linkStyles = { marginLeft: 2, textDecoration: 'none', ':hover': { textDecoration: 'underline' }, color: 'black' };
