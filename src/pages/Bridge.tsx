@@ -198,6 +198,7 @@ const Bridge: React.FC = () => {
             const bridge_contract = await Aeternity.Sdk.initializeContract({
                 aci: Constants.aeternity.bridge_aci,
                 address: Constants.aeternity.bridge_address,
+                omitUnknown: true,
             });
 
             setConfirmingMsg('Bridge action');
